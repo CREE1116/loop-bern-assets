@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LOOP:베른</title>
+<meta name="description" content="마법이 희귀한 중세 성벽도시 베른, 반복되는 죽음을 법칙으로 지워나가는 도시 루프 판타지.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🕯️</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Noto+Serif+KR:wght@600;700&family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root{
+  --bg:#0e0a06;
+  --surface:#18120c;
+  --surface-2:#201810;
+  --line:rgba(238,224,199,0.12);
+  --line-strong:rgba(238,224,199,0.20);
+  --text:#eee0c7;
+  --muted:#a3937a;
+  --accent:#c88a34;
+  --accent-soft:rgba(200,138,52,0.16);
+  --accent-line:rgba(200,138,52,0.4);
+}
+
+*{box-sizing:border-box; margin:0; padding:0;}
+html{background:var(--bg);}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
+  font-weight:300;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:0.01ms !important; transition-duration:0.01ms !important;}
+}
+.serif{font-family:'Noto Serif KR', serif;}
+.wordmark{font-family:'Cinzel', 'Noto Sans KR', serif;}
+.mono{font-family:'JetBrains Mono', ui-monospace, monospace;}
+a{color:inherit;}
+.wrap{max-width:960px; margin:0 auto; padding:0 28px;}
+
+.statusbar{
+  font-family:'JetBrains Mono', monospace;
+  font-size:12px;
+  letter-spacing:0.04em;
+  color:var(--muted);
+  display:flex;
+  gap:18px;
+  flex-wrap:wrap;
+  border:1px solid var(--line);
+  background:var(--surface);
+  padding:10px 16px;
+  border-radius:2px;
+}
+.statusbar b{color:var(--text); font-weight:500;}
+.statusbar .dot{color:var(--accent);}
+
+header.top{
+  position:sticky; top:0; z-index:40;
+  background:rgba(14,10,6,0.86);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+header.top .wrap{
+  display:flex; align-items:center; justify-content:space-between;
+  height:56px;
+  max-width:1080px;
+}
+.brand{
+  font-size:14px;
+  letter-spacing:0.08em;
+  font-weight:600;
+}
+.brand .colon{color:var(--accent);}
+.top-turn{
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px;
+  color:var(--muted);
+  letter-spacing:0.04em;
+}
+
+.hero{
+  position:relative;
+  min-height:92vh;
+  display:flex;
+  align-items:flex-end;
+  overflow:hidden;
+}
+.hero-img{
+  position:absolute; inset:0;
+  background-image:url('banner.png');
+  background-size:cover;
+  background-position:center 34%;
+  filter:saturate(0.9) brightness(0.5) sepia(0.12);
+  transform:scale(1.04);
+}
+.hero-scrim{
+  position:absolute; inset:0;
+  background:
+    linear-gradient(180deg, rgba(14,10,6,0.35) 0%, rgba(14,10,6,0.25) 40%, rgba(14,10,6,0.96) 92%),
+    linear-gradient(90deg, rgba(14,10,6,0.6) 0%, rgba(14,10,6,0.05) 45%);
+}
+.hero-inner{
+  position:relative;
+  width:100%;
+  max-width:1080px;
+  margin:0 auto;
+  padding:0 28px 72px;
+}
+.hero-eyebrow{
+  font-family:'JetBrains Mono', monospace;
+  font-size:12px;
+  color:var(--accent);
+  letter-spacing:0.16em;
+  text-transform:uppercase;
+  margin-bottom:22px;
+  opacity:0;
+  animation:rise 0.9s ease 0.15s forwards;
+}
+h1.title{
+  font-size:clamp(46px, 9.5vw, 108px);
+  line-height:1.02;
+  letter-spacing:0.02em;
+  text-wrap:balance;
+  opacity:0;
+  animation:rise 1s ease 0.3s forwards;
+}
+h1.title .colon{color:var(--accent);}
+.hero-tagline{
+  margin-top:22px;
+  max-width:520px;
+  font-size:17px;
+  color:#d8cbb0;
+  font-weight:300;
+  opacity:0;
+  animation:rise 1s ease 0.55s forwards;
+}
+@keyframes rise{
+  from{opacity:0; transform:translateY(14px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+section{padding:104px 0;}
+section.tight{padding:72px 0;}
+.eyebrow{
+  font-family:'JetBrains Mono', monospace;
+  font-size:12px;
+  color:var(--accent);
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  margin-bottom:18px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.eyebrow::before{content:''; width:22px; height:1px; background:var(--accent-line);}
+
+h2{
+  font-family:'Noto Serif KR', serif;
+  font-weight:700;
+  font-size:clamp(26px, 4.2vw, 38px);
+  line-height:1.3;
+  text-wrap:balance;
+  max-width:20ch;
+}
+
+.lede{
+  margin-top:22px;
+  max-width:62ch;
+  font-size:16.5px;
+  color:#d8cbb0;
+  font-weight:300;
+}
+.lede + .lede{margin-top:14px;}
+
+.premise-grid{
+  margin-top:56px;
+  display:grid;
+  grid-template-columns:1.1fr 0.9fr;
+  gap:56px;
+  align-items:start;
+}
+@media (max-width:760px){.premise-grid{grid-template-columns:1fr;}}
+
+.turn-ticker{
+  border:1px solid var(--line);
+  background:var(--surface);
+  padding:26px 24px;
+}
+.turn-ticker .cap{
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px;
+  color:var(--muted);
+  letter-spacing:0.08em;
+  margin-bottom:16px;
+}
+.ticks{display:flex; gap:6px; flex-wrap:wrap;}
+.tick{
+  width:28px; height:28px;
+  border:1px solid var(--line-strong);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px;
+  color:var(--muted);
+}
+.tick.dead{
+  background:var(--accent);
+  border-color:var(--accent);
+  color:#0e0a06;
+  font-weight:600;
+}
+.turn-note{
+  margin-top:16px;
+  font-size:13px;
+  color:var(--muted);
+  font-family:'JetBrains Mono', monospace;
+  line-height:1.7;
+}
+.turn-note b{color:var(--accent); font-weight:500;}
+
+.cycle{
+  margin-top:56px;
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  border-top:1px solid var(--line-strong);
+  border-left:1px solid var(--line-strong);
+}
+@media (max-width:820px){.cycle{grid-template-columns:1fr 1fr;}}
+@media (max-width:480px){.cycle{grid-template-columns:1fr;}}
+.cycle-step{
+  border-right:1px solid var(--line-strong);
+  border-bottom:1px solid var(--line-strong);
+  padding:28px 22px 32px;
+  position:relative;
+}
+.cycle-step .num{
+  font-family:'JetBrains Mono', monospace;
+  font-size:12px;
+  color:var(--accent);
+  letter-spacing:0.06em;
+}
+.cycle-step h3{
+  margin-top:14px;
+  font-family:'Noto Serif KR', serif;
+  font-weight:700;
+  font-size:19px;
+}
+.cycle-step p{
+  margin-top:10px;
+  font-size:13.5px;
+  color:var(--muted);
+  line-height:1.65;
+}
+
+.laws{
+  margin-top:56px;
+  display:flex;
+  flex-direction:column;
+  gap:1px;
+  background:var(--line);
+  border:1px solid var(--line);
+}
+.law{
+  background:var(--surface);
+  padding:22px 24px;
+  display:grid;
+  grid-template-columns:180px 1fr;
+  gap:20px;
+  align-items:baseline;
+}
+@media (max-width:640px){.law{grid-template-columns:1fr; gap:8px;}}
+.law .tag{
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px;
+  color:var(--muted);
+  letter-spacing:0.05em;
+}
+.law .tag span{color:var(--accent);}
+.law blockquote{
+  font-family:'Noto Serif KR', serif;
+  font-weight:700;
+  font-size:17px;
+  color:var(--text);
+}
+
+.omega{
+  margin-top:56px;
+  border:1px solid var(--line);
+  background:radial-gradient(ellipse at 20% 0%, rgba(200,138,52,0.08), transparent 55%), var(--surface);
+  padding:44px 40px;
+}
+@media (max-width:640px){.omega{padding:30px 24px;}}
+.omega-mark{
+  font-family:'Noto Serif KR', serif;
+  font-weight:700;
+  font-size:15px;
+  color:var(--accent);
+  margin-bottom:16px;
+}
+.omega p{
+  font-family:'Noto Serif KR', serif;
+  font-weight:600;
+  font-size:clamp(17px, 2.4vw, 21px);
+  line-height:1.75;
+  color:#ecdfc4;
+  max-width:44ch;
+}
+.omega .cite{
+  margin-top:22px;
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px;
+  color:var(--muted);
+  letter-spacing:0.06em;
+}
+
+.gallery{
+  margin-top:56px;
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:2px;
+}
+@media (max-width:760px){.gallery{grid-template-columns:repeat(2, 1fr);}}
+.frame{
+  position:relative;
+  aspect-ratio:4/5;
+  overflow:hidden;
+  background:var(--surface-2);
+}
+.frame img{
+  width:100%; height:100%; object-fit:cover;
+  filter:saturate(0.85) brightness(0.75) sepia(0.08);
+  transition:filter 0.5s ease, transform 6s ease;
+  display:block;
+}
+.frame:hover img{filter:saturate(1) brightness(0.88) sepia(0.05); transform:scale(1.04);}
+.frame .cap{
+  position:absolute; left:0; right:0; bottom:0;
+  padding:12px 14px;
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px;
+  color:#e9dcc0;
+  letter-spacing:0.04em;
+  background:linear-gradient(180deg, transparent, rgba(14,10,6,0.88));
+}
+
+.closing{
+  padding:120px 0 90px;
+  text-align:center;
+}
+.closing h2{
+  margin:0 auto;
+  max-width:16ch;
+  font-size:clamp(28px, 5vw, 42px);
+}
+.closing .lede{margin-left:auto; margin-right:auto; text-align:center;}
+.closing-mark{
+  margin-top:44px;
+  font-family:'JetBrains Mono', monospace;
+  font-size:12px;
+  color:var(--muted);
+  letter-spacing:0.08em;
+}
+.closing-mark b{color:var(--accent); font-weight:500;}
+
+footer{
+  border-top:1px solid var(--line);
+  padding:26px 0 48px;
+}
+footer .wrap{
+  display:flex; justify-content:space-between; align-items:center;
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px;
+  color:var(--muted);
+  letter-spacing:0.04em;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+::selection{background:var(--accent-soft); color:var(--text);}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand wordmark">LOOP<span class="colon">:</span>베른</div>
+    <div class="top-turn">[루프 1회차 · 턴 1/10]</div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-img"></div>
+  <div class="hero-scrim"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">자정 · 성벽도시 베른</div>
+    <h1 class="title wordmark">LOOP<span class="colon">:</span>베른</h1>
+    <p class="hero-tagline">당신은 매일 자정, 선술집 "꺼지지 않는 등불" 앞에서 눈을 뜬다. 이유는 모른다. 하지만 몸은 안다 — 오늘 밤도, 10턴이 넘어가기 전에 반드시 죽는다.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Premise</div>
+    <h2>죽음은 우회한다. 도망칠수록 다른 얼굴로 찾아온다.</h2>
+    <div class="premise-grid">
+      <div>
+        <p class="lede">마법이 희귀한 중세 성벽도시 베른의 밤. 당신의 생존은 반복적으로 죽음에 수렴하도록 설계된 어떤 이유 하나로부터 시작된다. 그 이유는 절대 직접 공개되지 않는다.</p>
+        <p class="lede">회피는 통하지 않는다 — 막힌 경로는 반드시 다른 형태의 사고로 당신을 다시 찾아온다. 유일한 방법은 반복 속에서 단서를 모으고, 죽을 때마다 세계에 새기는 법칙(주문) 하나로 <b style="color:var(--text); font-weight:400;">죽어야 할 이유 자체를</b> 지워나가는 것뿐이다.</p>
+      </div>
+      <div class="turn-ticker">
+        <div class="cap">TURN LIMIT</div>
+        <div class="ticks">
+          <div class="tick">1</div><div class="tick">2</div><div class="tick">3</div><div class="tick">4</div>
+          <div class="tick">5</div><div class="tick">6</div><div class="tick">7</div><div class="tick">8</div>
+          <div class="tick">9</div><div class="tick dead">†</div>
+        </div>
+        <div class="turn-note">TURN10 응답 종료 전, <b>반드시 사망 확정.</b><br>사망 → Ω 조우 → 법칙(주문) 1개 선언 → 최초 시점 복귀.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="tight" style="background:var(--surface); border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
+  <div class="wrap">
+    <div class="eyebrow">Core Loop</div>
+    <h2>같은 밤을 몇 번이고 다시 산다</h2>
+    <div class="cycle">
+      <div class="cycle-step">
+        <div class="num">01 — OBSERVE</div>
+        <h3>관찰</h3>
+        <p>반복되는 사건, 성벽도시 사람들의 행동, 전언과 물건 속에서 죽음으로 이어지는 단서를 좁혀 간다.</p>
+      </div>
+      <div class="cycle-step">
+        <div class="num">02 — DECIDE</div>
+        <h3>결정</h3>
+        <p>이번 루프에서 무엇을 다르게 할지 정한다. 같은 선택은 같은 역사를 그대로 재현한다.</p>
+      </div>
+      <div class="cycle-step">
+        <div class="num">03 — ACT</div>
+        <h3>행동</h3>
+        <p>위험한 시간대에 접근하거나 회피한다. 회피만으로 이유 자체는 사라지지 않는다.</p>
+      </div>
+      <div class="cycle-step">
+        <div class="num">04 — CONSEQUENCE</div>
+        <h3>결과</h3>
+        <p>생존하거나, 죽는다. 죽으면 Ω 앞에서 다음 세계에 영원히 남을 법칙 하나를 새긴다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">World Law</div>
+    <h2>법칙은 취소되지 않는다. 문구 그대로, 영원히.</h2>
+    <p class="lede">위력·범위·대상에 제한은 없다 — 마법의 형태여도 무방하다. 다만 죽음의 진짜 이유를 직접 알려주는 문장만은 등록할 수 없다 — 그건 법칙이 아니라 답을 요구하는 문장이므로.</p>
+    <div class="laws">
+      <div class="law">
+        <div class="tag">LAW <span>·</span> 001</div>
+        <blockquote>"검은 나를 벨 수 없다."</blockquote>
+      </div>
+      <div class="law">
+        <div class="tag">LAW <span>·</span> 002</div>
+        <blockquote>"거짓말을 하면 목소리가 나오지 않는다."</blockquote>
+      </div>
+      <div class="law">
+        <div class="tag">LAW <span>·</span> 003</div>
+        <blockquote>"양피지에 적힌 글은 지워지지 않는다."</blockquote>
+      </div>
+      <div class="law">
+        <div class="tag">REJECTED</div>
+        <blockquote style="color:var(--muted); font-family:'JetBrains Mono', monospace; font-size:14px; font-weight:400;">"내가 죽는 이유를 알게 된다." — Ω: "그건 법칙이 아니라 답을 요구하는 문장이야."</blockquote>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="tight">
+  <div class="wrap">
+    <div class="omega">
+      <div class="omega-mark">Ω</div>
+      <p>"이번에도 여기까지군." 사망과 루프 사이, 시간도 장소도 특정할 수 없는 공간에서만 만나는 존재. 오래 반복된 일을 처리하듯 차분하고, 무엇을 알고 있어도 진실을 말하지 않는다.</p>
+      <div class="cite">Ω — 루프 밖 초월자 · 세션을 넘어 유일하게 동일한 존재</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Scenes</div>
+    <h2>성벽 안, 매번 조금씩 어긋나는 베른</h2>
+    <div class="gallery">
+      <div class="frame"><img src="scene/tavern-inside.png" alt="선술집 안" loading="lazy"><div class="cap">scene · 선술집 안</div></div>
+      <div class="frame"><img src="scene/market.png" alt="시장" loading="lazy"><div class="cap">scene · 시장</div></div>
+      <div class="frame"><img src="scene/city-wall.png" alt="성벽 위" loading="lazy"><div class="cap">scene · 성벽 위</div></div>
+      <div class="frame"><img src="scene/castle-hall.png" alt="영주의 성 홀" loading="lazy"><div class="cap">scene · 영주의 성 홀</div></div>
+      <div class="frame"><img src="scene/dungeon.png" alt="지하 감옥" loading="lazy"><div class="cap">scene · 지하 감옥</div></div>
+      <div class="frame"><img src="scene/graveyard.png" alt="묘지" loading="lazy"><div class="cap">scene · 묘지</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="closing">
+  <div class="wrap">
+    <div class="eyebrow" style="justify-content:center;">Loop 1 · Turn 1</div>
+    <h2>오늘 밤, 당신은 무엇을 새길 것인가.</h2>
+    <p class="lede">이름도, 종족도, 직업도 전부 당신이 정한다. 정해지지 않은 건 단 하나 — 오늘 밤이 몇 번째인지 뿐이다.</p>
+    <div class="closing-mark">STATUS = <b>INTACT</b> · 등록된 법칙 없음 · 자정, 선술집 앞</div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>LOOP:베른</span>
+    <span>마법이 희귀한 중세 성벽도시 · 도시 루프 판타지</span>
+  </div>
+</footer>
+
+</body>
+</html>
